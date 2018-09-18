@@ -1,3 +1,10 @@
+# author : NIHAR MUKHIYA
+# date : 18/09/2018
+# description : implementation of various operations of BST such as
+#               insertion, deletion, max-min value, parent-of-a-node, inorder, preorder, postorder
+#               in python
+
+
 import  sys
 class Node(object):
     def __init__(self, val):
@@ -26,38 +33,61 @@ class Node(object):
             current = current.lc
         return current
 
+    def findParent(self, val):
+        parent = None
+        while True:
+            if(self.val is None):
+                return (None, None)
+            if(self.val == val):
+                return (parent, self)
+            if(self.val < val):
+                parent, self = self, self.rc
+            else:
+                parent, self = self, self.lc
+
     def deleteNode(self, val):
+        parent, node = self.findParent(val)
+        # if node has no children
+        if(node.lc is None and node.rc is None):
+            if(parent):
+                if(parent.lc is node):
+                    parent.lc = None
+                else:
+                    parent.rc = None
 
-        if self is None:
-            return None
-
-        elif(self.lc is None and self.rc is None):
-            self = None
-            return self
-        if(val < self.val):
-            self.lc = self.lc.deleteNode(val)
-
-        elif(val > self.val):
-            self.rc = self.rc.deleteNode(val)
-
+            # if node with no children is root itself
+            else:
+                self.val = None
+            del node
+        # if node has one child
+        elif(self.lc is not None or self.rc is not None):
+            if(self.lc):
+                t = self.lc
+            else:
+                t = self.rc
+            if(parent):
+                if(parent.lc is node):
+                    parent.lc = t
+                else:
+                    parent.rc = t
+            # if node with one child that is deleted is root itself
+            else:
+                self.lc = t.lc
+                self.rc = t.rc
+                self.val = t.val
+            del node
+        # if node has two children
         else:
-
-            if(self.lc is None):
-                temp = self.rc
-                self = None
-                return temp
-
-            elif(self.rc is None):
-                temp = self.lc
-                self = None
-                return temp
-
-            temp = self.minValue(self.rc)
-
-            self.val = temp.val
-
-            self.rc = self.deleteNode(self.rc, temp.val)
-        return self
+            node = parent
+            successor = node.rc
+            while(successor.lc):
+                parent = successor
+                successor = successor.lc
+            node.val = successor.val
+            if(parent.lc == successor):
+                parent.lc = successor.rc
+            else:
+                parent.lc = successor.rc
 
 
     def inorder(self):
@@ -92,7 +122,7 @@ root = Node(a)
 
 
 while(1):
-    z = input("Enter your choice\n 1. Insert\n2.smallest element\n 3. Inorder\n 4. Preorder\n 5. Postorder\n 6.Delete\n7. Exit\n")
+    z = input("Enter your choice\n 1. Insert\n2.smallest element\n 3. Inorder\n 4. Preorder\n 5. Postorder\n 6.Delete\n7. Exit\n8.find parent\n")
     if (z == '1'):
         b = int(input("enter the number of elements to be inserted"))
         while (b > 0):
@@ -123,6 +153,12 @@ while(1):
 
     elif(z=='7'):
         sys.exit()
+
+    elif(z=='8'):
+        h = int(input("enter elemnet whose parent is to be found: "))
+        parent, node = root.findParent(h)
+        print(type(parent))
+        print(parent, node)
 
     else:
         print("wrong input!!")
