@@ -47,7 +47,6 @@ class Node(object):
 
     def deleteNode(self, val):
         parent, node = self.findParent(val)
-
         # if node has no children
         if(node.lc is None and node.rc is None):
             if(parent):
@@ -61,37 +60,60 @@ class Node(object):
                 self.val = None
             del node
         # if node has one child
-        elif(self.lc is not None or self.rc is not None):
-            if(node.lc):
-                t = node.lc
-            else:
-                t = node.rc
-
-            if(parent):
-                if(parent.lc is node):
-                    parent.lc = t
-                else:
-                    parent.rc = t
-            # if node with one child that is deleted is root itself
-            else:
-                self.lc = t.lc
-                self.rc = t.rc
-                self.val = t.val
-
-            del node
-        # if node has two children
         else:
-            node = parent
-            successor = node.rc
-            while(successor.lc):
-                parent = successor
-                successor = successor.lc
-            node.val = successor.val
-            if(parent.lc == successor):
-                parent.lc = successor.rc
-            else:
-                parent.lc = successor.rc
+            if(node.lc is None):
+                t = node.rc
+                if (parent):
+                    if (parent.lc is node):
+                        parent.lc = t
+                    else:
+                        parent.rc = t
+                    del node
+                # if node with one child that is deleted is root itself
+                else:
+                    self.lc = t.lc
+                    self.rc = t.rc
+                    self.val = t.val
 
+            elif(node.rc is None):
+                t = node.lc
+                if (parent):
+                    if (parent.lc is node):
+                        parent.lc = t
+                    else:
+                        parent.rc = t
+                    del node
+                # if node with one child that is deleted is root itself
+                else:
+                    self.lc = t.lc
+                    self.rc = t.rc
+                    self.val = t.val
+        try:
+            node
+            temp = self.minValue(node.rc)
+            p1, n1 = self.findParent(temp.val)
+            node.val = temp.val
+            if(p1.lc is n1):
+                p1.lc = None
+            else:
+                p1.rc = None
+        except:
+            print("node deleted")
+
+        """
+        # if node has two children
+        parent = node
+        successor = node.rc
+        while(successor.lc):
+            node = successor
+            successor = successor.lc
+        parent.val = successor.val
+        node.lc = None
+        if(parent.lc == successor):
+            parent.lc = successor.rc
+        else:
+            parent.lc = successor.rc
+        """
 
     def inorder(self):
         if(self.val):
