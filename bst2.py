@@ -47,6 +47,7 @@ class Node(object):
 
     def deleteNode(self, val):
         parent, node = self.findParent(val)
+
         # if node has no children
         if(node.lc is None and node.rc is None):
             if(parent):
@@ -61,10 +62,11 @@ class Node(object):
             del node
         # if node has one child
         elif(self.lc is not None or self.rc is not None):
-            if(self.lc):
-                t = self.lc
+            if(node.lc):
+                t = node.lc
             else:
-                t = self.rc
+                t = node.rc
+
             if(parent):
                 if(parent.lc is node):
                     parent.lc = t
@@ -75,6 +77,7 @@ class Node(object):
                 self.lc = t.lc
                 self.rc = t.rc
                 self.val = t.val
+
             del node
         # if node has two children
         else:
@@ -122,7 +125,7 @@ root = Node(a)
 
 
 while(1):
-    z = input("Enter your choice\n 1. Insert\n2.smallest element\n 3. Inorder\n 4. Preorder\n 5. Postorder\n 6.Delete\n7. Exit\n8.find parent\n")
+    z = input("Enter your choice\n 1. Insert\n2.smallest element\n 3. Inorder\n 4. Preorder\n 5. Postorder\n 6.Delete\n7. Exit\n")
     if (z == '1'):
         b = int(input("enter the number of elements to be inserted"))
         while (b > 0):
@@ -148,17 +151,14 @@ while(1):
 
     elif(z == '6'):
         g = int(input("enter element to be deleted: "))
+
         v = root.deleteNode(g)
 
 
     elif(z=='7'):
         sys.exit()
 
-    elif(z=='8'):
-        h = int(input("enter elemnet whose parent is to be found: "))
-        parent, node = root.findParent(h)
-        print(type(parent))
-        print(parent, node)
+
 
     else:
         print("wrong input!!")
